@@ -1,0 +1,69 @@
+typedef struct Trienode{
+    struct Trienode *child[26];
+    bool isWord;
+}Trienode;
+class Solution {
+public:
+    Trienode* newNode()
+    {
+        Trienode *t= new Trienode();
+        t->isWord= false;
+
+        for(int i=0;i<26;i++)
+        {
+            t->child[i]=NULL;
+        }
+        return t;
+    }
+    void insert(Trienode *temp, string key)
+    {
+        int l= key.size();
+        // Trienode *temp= root;
+        for(int i=0;i<l;i++)
+        {
+            if(temp->child[key[i]-'a']==NULL)
+                temp->child[key[i]-'a']= newNode();
+            
+            temp= temp->child[key[i]-'a'];
+            
+        }
+        temp->isWord= true;
+        
+    }
+    string combo(Trienode *root,int t)
+    {
+        string ans="";
+        while(t--)
+        {
+            int c=0;
+            int ind;
+            for(int i=0;i<26;i++)
+            {
+                if(root->child[i])
+                {
+                    c++;
+                    ind=i;
+                }
+            }
+            if(c==1)
+              {  ans+= 97+ind;
+                root= root->child[ind];}
+            else
+             break;
+        }
+        return ans;
+    }
+    string longestCommonPrefix(vector<string>& strs) {
+        Trienode *root=newNode();
+        int mini=201;
+        for(int i=0;i<strs.size();i++)
+        {
+            if(strs[i].size()==0) return "";
+            insert(root,strs[i]);
+            int t=strs[i].size();
+            mini= min(mini,t);
+        }
+        return combo(root,mini);
+
+    }
+};
